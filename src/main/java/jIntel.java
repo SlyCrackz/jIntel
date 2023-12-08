@@ -3,7 +3,8 @@ import okhttp3.OkHttpClient;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 public class jIntel {
@@ -15,13 +16,12 @@ public class jIntel {
         // Create and set up the window
         JFrame frame = new JFrame("jIntel");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 400);
+        frame.setSize(300, 300);
         frame.setLayout(new BorderLayout());
 
         // UI Elements
         JTextField characterNameField = new JTextField();
-        characterNameField.setPreferredSize(new Dimension(300, 30));
-        JButton searchButton = new JButton("Search");
+        characterNameField.setPreferredSize(new Dimension(280, 30));
         JTextArea resultArea = new JTextArea();
         resultArea.setEditable(false);
 
@@ -29,7 +29,6 @@ public class jIntel {
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 20));
         topPanel.add(characterNameField);
-        topPanel.add(searchButton);
 
         // Result Area
         JScrollPane scrollPane = new JScrollPane(resultArea);
@@ -39,25 +38,29 @@ public class jIntel {
         frame.add(topPanel, BorderLayout.NORTH);
         frame.add(scrollPane, BorderLayout.CENTER);
 
-        // Search Button Action
-        searchButton.addActionListener((ActionEvent e) -> {
-            String characterName = characterNameField.getText();
-            OkHttpClient httpClient = new OkHttpClient();
-            ToonRetriever retriever = new ToonRetriever(httpClient);
-            zKillFetcher zKillFetcher = new zKillFetcher(retriever);
+        // Action when Enter is pressed
+        characterNameField.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    String characterName = characterNameField.getText();
+                    OkHttpClient httpClient = new OkHttpClient();
+                    ToonRetriever retriever = new ToonRetriever(httpClient);
+                    zKillFetcher zKillFetcher = new zKillFetcher(retriever);
 
-            try {
-                Long characterId = retriever.getCharacterId(characterName);
-                if (characterId != null) {
-                    String characterDetails = retriever.fetchCharacterDetails(characterId);
-                    String zKillDetails = zKillFetcher.fetchZKillInfo(characterId);
-                    resultArea.setText(characterDetails + zKillDetails);
-                } else {
-                    resultArea.setText("Character not found: " + characterName);
+                    try {
+                        Long characterId = retriever.getCharacterId(characterName);
+                        if (characterId != null) {
+                            String characterDetails = retriever.fetchCharacterDetails(characterId);
+                            String zKillDetails = zKillFetcher.fetchZKillInfo(characterId);
+                            resultArea.setText(characterDetails + zKillDetails);
+                        } else {
+                            resultArea.setText("Character not found: " + characterName);
+                        }
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        resultArea.setText("An error occurred: " + ex.getMessage());
+                    }
                 }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                resultArea.setText("An error occurred: " + ex.getMessage());
             }
         });
 
