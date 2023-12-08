@@ -6,8 +6,12 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 
 public class jIntel {
+    private static final Logger LOGGER = Logger.getLogger(jIntel.class.getName());
 
     public static void main(String[] args) {
         // Set the look and feel to Dark FlatLaf
@@ -57,12 +61,13 @@ public class jIntel {
                             resultArea.setText("Character not found: " + characterName);
                         }
                     } catch (IOException ex) {
-                        ex.printStackTrace();
+                        LOGGER.log(Level.SEVERE, "An error occurred", ex);
                         resultArea.setText("An error occurred: " + ex.getMessage());
                     }
                 }
             }
         });
+
 
         // Display the window
         frame.setLocationRelativeTo(null); // Center the window
