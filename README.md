@@ -31,7 +31,7 @@ java -jar jIntel-fat.jar or by just double clicking the jar.
 
 ### How to Use jIntel
 - Input a character name in the text field provided in the application.
-- Hit the "Search" button to fetch and display relevant statistics from zKillboard for the character and their affiliated corporation.
+- Hit the "Enter" or "Return" key to fetch and display relevant statistics from zKillboard for the character and their affiliated corporation.
 
 ## Contributing
 We welcome contributions to jIntel. Feel free to fork the repository, make your changes, and submit a pull request for review.
